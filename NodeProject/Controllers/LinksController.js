@@ -17,34 +17,33 @@ const LinksController = {
                 if (!link.clicks) {
                     link.clicks = []; // Ensure clicks is an array
                 }
-    
-                // Capture the correct IP address either directly or via proxy
+
                 let ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || (req.connection.socket ? req.connection.socket.remoteAddress : null);
-    
-                // Convert IPv6 localhost addresses to IPv4
+
                 if (ipAddress === "::1") {
                     ipAddress = "127.0.0.1";
                 }
-    
                 // Ensure targetParamValue captures the value from the request query
-                const targetParamValue = req.query[link.targetParamName] || '';
-
+                const targetParamValue = req.query.targetParamName||req.query.t || '';
+console.log('targetParamValue',targetParamValue)
                 // Find the target value name
                 let targetValueName = '';
                 const targetValueObj = link.targetValues.find(value => value.value === targetParamValue);
                 if (targetValueObj) {
                     targetValueName = targetValueObj.name;
+                    console.log('targetValueName',targetValueName)
                 }
-
                 const newClick = {
                     insertedAt: new Date(),
                     ipAddress,
                     targetParamValue,
                     targetValueName // storing the name as well
                 };
+                console.log(newClick,"new Click")
                 link.clicks.push(newClick);
 
                 await link.save();
+
                 res.redirect(link.originalUrl);
             } else {
                 res.status(404).json({ message: 'Link not found' });
@@ -54,13 +53,25 @@ const LinksController = {
             console.error(e); // Log the error for debugging
         }
     },
-    
+
     getByClick: async (req, res) => {
         try {
-            const link = await LinksModel.findById(req.params.id, 'clicks');
+            const link = await LinksModel.findById(req.params.id);
             if (link) {
-                // Return the entire clicks array
-                res.json(link.clicks);
+                const groupedClicks = link.clicks.reduce((acc, click) => {
+                    if (!acc[click.targetParamValue]) {
+                        acc[click.targetParamValue] = [];
+                    }
+                    acc[click.targetParamValue].push(click);
+                    return acc;
+                }, {});
+
+                const result = Object.keys(groupedClicks).map(key => ({
+                    targetParamValue: key,
+                    clicks: groupedClicks[key]
+                }));
+
+                res.json(result);
             } else {
                 res.status(404).json({ message: 'Link not found' });
             }
@@ -68,7 +79,7 @@ const LinksController = {
             res.status(400).json({ message: e.message });
         }
     },
-    
+
     add: async (req, res) => {
         const { originalUrl, targetParamName, targetValues } = req.body;
         try {

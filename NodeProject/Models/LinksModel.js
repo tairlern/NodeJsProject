@@ -4,7 +4,7 @@ const clickSchema = new mongoose.Schema({
     insertedAt: { type: Date, default: Date.now },
     ipAddress: String,
     targetParamValue: String,
-    targetValueName: String, // Ensure this field exists
+    // targetValueName: String, // Ensure this field exists
 });
 
 const targetValueSchema = new mongoose.Schema({

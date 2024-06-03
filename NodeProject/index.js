@@ -20,7 +20,7 @@ app.use('/user',UserRouter)
 
 console.log("hi")
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello World! if you whant to user write - /user and to links - /links')
 })
 
 app.listen(port, () => {

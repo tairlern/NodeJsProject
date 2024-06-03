@@ -6,9 +6,9 @@ const LinksRouter = express.Router()
 
 LinksRouter.get('/', LinksController.getList)
 
-LinksRouter.get('/:id',LinksController.getById)
-
 LinksRouter.get('/:id/clicks',LinksController.getByClick)
+
+LinksRouter.get('/:id/:targetParamName?',LinksController.getById)
 
 LinksRouter.post('/', LinksController.add)
 
