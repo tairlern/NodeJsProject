@@ -1,11 +1,24 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const LinksSchema = mongoose.Schema({
-    originalUrl: {
-        type: String,
-        required: true,
-        default: "url def"
-    },
+const clickSchema = new mongoose.Schema({
+    insertedAt: { type: Date, default: Date.now },
+    ipAddress: String,
+    targetParamValue: String,
+    targetValueName: String, // Ensure this field exists
 });
 
-export default mongoose.model("links", LinksSchema);
+const targetValueSchema = new mongoose.Schema({
+    name: String,
+    value: String,
+});
+
+const linksSchema = new mongoose.Schema({
+    originalUrl: String,
+    clicks: [clickSchema],
+    targetParamName: String,
+    targetValues: [targetValueSchema],
+});
+
+const LinksModel = mongoose.model('Links', linksSchema);
+
+export default LinksModel;

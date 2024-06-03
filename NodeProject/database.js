@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 const uri =
 "mongodb+srv://tairt:tairy2468@cluster0.0kkiq15.mongodb.net/"
 const uriLocal = "mongodb://localhost:27017/nodeProject";
-console.log("good")
 const connectDB = async () => {
   await mongoose.connect(uriLocal);
 };

@@ -8,6 +8,8 @@ LinksRouter.get('/', LinksController.getList)
 
 LinksRouter.get('/:id',LinksController.getById)
 
+LinksRouter.get('/:id/clicks',LinksController.getByClick)
+
 LinksRouter.post('/', LinksController.add)
 
 LinksRouter.put('/:id', LinksController.update)

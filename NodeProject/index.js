@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import LinksRouter from './Routers/LinksRouter.js';
 import UserRouter from './Routers/UserRouter.js';
 import connectDB from './database.js';
-import redirectLinkRouter from './Routers/redirectLinkRouter.js';
+
 
 connectDB();
 const port = 3000;
@@ -17,7 +17,6 @@ app.use(bodyParser.text());
 
 app.use('/links',LinksRouter)
 app.use('/user',UserRouter)
-app.use('/redirectLink',redirectLinkRouter)
 
 console.log("hi")
 app.get('/', (req, res) => {
